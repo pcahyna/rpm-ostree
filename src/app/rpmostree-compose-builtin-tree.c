@@ -78,8 +78,10 @@ static GOptionEntry install_option_entries[] = {
   { "cachedir", 0, 0, G_OPTION_ARG_STRING, &opt_cachedir, "Cached state", "CACHEDIR" },
   { "download-only", 0, 0, G_OPTION_ARG_NONE, &opt_download_only, "Like --dry-run, but download RPMs as well; requires --cachedir", NULL },
   { "ex-unified-core", 0, 0, G_OPTION_ARG_NONE, &opt_ex_unified_core, "Use new \"unified core\" codepath", NULL },
-  { "ex-jigdo-output-rpm", 0, 0, G_OPTION_ARG_STRING, &opt_ex_jigdo_output_rpm, "Directory to write jigdoRPM", NULL },
-  { "ex-jigdo-output-set", 0, 0, G_OPTION_ARG_STRING, &opt_ex_jigdo_output_set, "Directory to write complete jigdo set (jigdoRPM+dependencies)", NULL },
+  { "ex-jigdo-output-rpm", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &opt_ex_jigdo_output_rpm, "Deprecated alias", NULL },
+  { "ex-jigdo-output-set", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &opt_ex_jigdo_output_set, "Deprecated alias", NULL },
+  { "ex-rojig-output-rpm", 0, 0, G_OPTION_ARG_STRING, &opt_ex_jigdo_output_rpm, "Directory to write jigdoRPM", NULL },
+  { "ex-rojig-output-set", 0, 0, G_OPTION_ARG_STRING, &opt_ex_jigdo_output_set, "Directory to write complete jigdo set (jigdoRPM+dependencies)", NULL },
   { "proxy", 0, 0, G_OPTION_ARG_STRING, &opt_proxy, "HTTP proxy", "PROXY" },
   { "dry-run", 0, 0, G_OPTION_ARG_NONE, &opt_dry_run, "Just print the transaction and exit", NULL },
   { "output-repodata-dir", 0, 0, G_OPTION_ARG_STRING, &opt_output_repodata_dir, "Save downloaded repodata in DIR", "DIR" },
@@ -1277,7 +1279,7 @@ impl_commit_tree (RpmOstreeTreeComposeContext *self,
     {
       if (!self->jigdo_spec)
         return glnx_throw (error, "No ex-jigdo-spec provided");
-      if (!rpmostree_commit2jigdo (self->repo, self->pkgcache_repo,
+      if (!rpmostree_commit2rojig (self->repo, self->pkgcache_repo,
                                    new_revision, self->jigdo_spec,
                                    jigdo_outputdir,
                                    cancellable, error))
